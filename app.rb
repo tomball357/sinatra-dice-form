@@ -7,18 +7,16 @@ get("/") do
   erb(:homepage)
 end
 
-get("/dice/:number_of_dice/:how_many_sides") do
-  @num_dice = params.fetch("number_of_dice").to_i
 
-  @sides = params.fetch("how_many_sides").to_i
-  
-  @rolls = []
+  # Route to process dice rolls
+get "/process_roll" do
+  # Get query parameters, default to 1 die with 6 sides if missing
+  @num_dice = params[:dice].to_i > 0 ? params[:dice].to_i : 1
+  @sides = params[:sides].to_i > 0 ? params[:sides].to_i : 6
 
-  @num_dice.times do
-    die = rand(1..@sides)
+  # Generate random rolls
+  @rolls = Array.new(@num_dice) { rand(1..@sides) }
 
-    @rolls.push(die)
-  end
-
-  erb(:process_roll)
+  erb :process_roll
 end
+
